@@ -1,0 +1,176 @@
+
+[
+    {
+        "database": "postgres",
+        "index": "movies_fr", 
+        "plugins": ["MoviesFr"],
+        "nodes": {
+            "table": "tmdb_movie",
+            "schema": "public",
+            "columns": [
+                "id",
+                "adult",
+                "backdrop_path",
+                "budget",
+                "homepage",
+                "imdb_id",
+                "original_language",
+                "original_title",
+                "popularity",
+                "release_date",
+                "revenue",
+                "runtime",
+                "status",
+                "vote_average",
+                "vote_count",
+                "collection_id"
+            ],
+            "children": [
+                {
+                    "table": "tmdb_movie_translation",
+                    "columns": [
+                        "title",
+                        "overview",
+                        "poster_path",
+                        "tagline",
+                        "language_id"
+                    ],
+                    "label": "translations",
+                    "relationship": {
+                        "variant": "object",
+                        "type": "one_to_many",
+                        "foreign_key": {
+                            "child": ["movie_id"],
+                            "parent": ["id"]
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    {
+        "database": "postgres",
+        "index": "movies_en", 
+        "plugins": ["MoviesEn"],
+        "nodes": {
+            "table": "tmdb_movie",
+            "schema": "public",
+            "columns": [
+                "id",
+                "adult",
+                "backdrop_path",
+                "budget",
+                "homepage",
+                "imdb_id",
+                "original_language",
+                "original_title",
+                "popularity",
+                "release_date",
+                "revenue",
+                "runtime",
+                "status",
+                "vote_average",
+                "vote_count",
+                "collection_id"
+            ],
+            "children": [
+                {
+                    "table": "tmdb_movie_translation",
+                    "columns": [
+                        "title",
+                        "overview",
+                        "poster_path",
+                        "tagline",
+                        "language_id"
+                    ],
+                    "label": "translations",
+                    "relationship": {
+                        "variant": "object",
+                        "type": "one_to_many",
+                        "foreign_key": {
+                            "child": ["movie_id"],
+                            "parent": ["id"]
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    {
+        "database": "postgres",
+        "index": "users",
+        "nodes": {
+            "table": "user",
+            "schema": "public",
+            "columns": [
+                "id",
+                "username",
+                "full_name",
+                "avatar_url",
+                "followers_count",
+                "following_count",
+                "created_at",
+                "premium",
+                "language",
+                "private"
+            ]
+        }
+    },
+    {
+        "database": "postgres",
+        "index": "playlists",
+        "plugins": ["Playlists"],
+        "nodes": {
+            "table": "playlist",
+            "schema": "public",
+            "columns": [
+                "id",
+                "created_at",
+                "updated_at",
+                "user_id",
+                "title",
+                "description",
+                "poster_url",
+                "featured",
+                "items_count",
+                "likes_count",
+                "private"
+            ],
+            "children": [
+                {
+                    "table": "user",
+                    "columns": [
+                        "id",
+                        "username",
+                        "full_name",
+                        "avatar_url"
+                    ],
+                    "label": "user",
+                    "relationship": {
+                        "variant": "object",
+                        "type": "one_to_one",
+                        "foreign_key": {
+                            "child": ["id"],
+                            "parent": ["user_id"]
+                        }
+                    }
+                },
+                {
+                    "table": "playlist_guest",
+                    "columns": [
+                        "user_id"
+                    ],
+                    "label": "guests",
+                    "relationship": {
+                        "variant": "object",
+                        "type": "one_to_many",
+                        "foreign_key": {
+                            "child": ["playlist_id"],
+                            "parent": ["id"]
+                        }
+                    }
+                }
+            ]
+        }
+    }
+]

@@ -1,0 +1,49 @@
+
+[
+    {
+        "database": "postgres",
+        "index": "movies", 
+		"mapping": {
+            "translations": {
+                "type": "nested"
+            }
+        },
+        "nodes": {
+            "table": "tmdb_movie",
+            "schema": "public",
+            "columns": [
+                "id",
+                "adult",
+                "backdrop_path",
+                "budget",
+                "homepage",
+                "imdb_id",
+                "original_language",
+                "original_title",
+                "popularity",
+                "release_date",
+                "revenue",
+                "runtime",
+                "status",
+                "vote_average",
+                "vote_count",
+                "collection_id"
+            ],
+            "children": [
+                {
+                    "table": "tmdb_movie_translation",
+                    "columns": [
+                        "title",
+                        "overview",
+                        "language_id"
+                    ],
+                    "label": "translations",
+                    "relationship": {
+                        "variant": "object",
+                        "type": "one_to_many"
+                    }
+                }
+            ]
+        }
+    }
+]

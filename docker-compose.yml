@@ -1,0 +1,46 @@
+# Usage
+#   Start:          docker compose up
+#   With helpers:   docker compose -f docker-compose.yml -f ./dev/docker-compose.dev.yml up
+#   Stop:           docker compose down
+#   Destroy:        docker compose -f docker-compose.yml -f ./dev/docker-compose.dev.yml down -v --remove-orphans
+
+name: supabase
+version: "3.8"
+
+services:
+  pgsync-redis:
+    container_name: pgsync-redis
+    image: redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    command: redis-server --requirepass ${PGSYNC_REDIS_PASSWORD}
+    ports:
+      - 6379:6379
+  
+  pgsync:
+    container_name: pgsync
+    build: ./requirements/pgsync
+    depends_on:
+      db:
+        condition: service_healthy
+      pgsync-redis:
+        condition: service_healthy
+    environment:
+      - PG_USER=${PG_USER}
+      - PG_PASSWORD=${PG_PASSWORD}
+      - PG_HOST=${PG_HOST}
+      - PG_PORT=${PG_PORT}
+      - PG_DATABASE=${PG_DATABASE}
+      - REDIS_HOST=pgsync-redis
+      - REDIS_PORT=6379
+      - REDIS_AUTH=${PGSYNC_REDIS_PASSWORD}
+      - ELASTICSEARCH_SCHEME=${ELASTICSEARCH_SCHEME}
+      - ELASTICSEARCH_HOST=${ELASTICSEARCH_HOST}
+      - ELASTICSEARCH_PORT=${ELASTICSEARCH_PORT}
+      - ELASTICSEARCH_USER=${ELASTICSEARCH_USER}
+      - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
+      - ELASTICSEARCH=True
+      - LOG_LEVEL=INFO
