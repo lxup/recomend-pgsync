@@ -15,8 +15,6 @@ services:
     container_name: pgsync
     build: ./requirements/pgsync
     depends_on:
-      db:
-        condition: service_healthy
       pgsync-redis:
         condition: service_healthy
     environment:
